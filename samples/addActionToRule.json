@@ -1,0 +1,47 @@
+/v1/rules/c71dd0e6-31c5-4d2f-8756-f753692d86fe
+
+{
+    "id": "c71dd0e6-31c5-4d2f-8756-f753692d86fe",
+    "internal_type": null,
+    "org_id": "1260a72e-9313-4a78-a4e5-648f836e0235",
+    "full_type": "detection_rule",
+    "type": "detection",
+    "active": true,
+    "passive": false,
+    "source": "strings.ilike(subject.subject, \"*Sublime-Standard-Test-String*\")\nor regex.icontains(body.html.raw, \".*Sublime-Standard-Test-String.*\")\nor regex.icontains(body.plain.raw, \".*Sublime-Standard-Test-String.*\")",
+    "source_md5": "4d5b4ba735d878b295c0b283d2e7e117",
+    "name": "Test rule",
+    "authors": [
+        {
+            "name": "Melissa Hale"
+        }
+    ],
+    "description": "The Sublime standard test rule will flag on any message that contains the string \"Sublime-Standard-Test-String\" anywhere in the subject or body. The purpose of this rule is to confirm that the Sublime system is operating correctly.",
+    "references": [],
+    "tags": [
+        "Testing"
+    ],
+    "false_positives": null,
+    "maturity": null,
+    "severity": null,
+    "label": null,
+    "created_by_api_request_id": null,
+    "created_by_org_id": "1260a72e-9313-4a78-a4e5-648f836e0235",
+    "created_by_org_name": "Sandbox (PS)",
+    "created_by_user_id": "bf95be60-8587-4161-aa91-eb6d790f7427",
+    "created_by_user_name": "Melissa Hale",
+    "created_at": "2025-01-13 16:54:30.667462+00",
+    "updated_at": "2025-01-13 16:54:30.667462+00",
+    "active_updated_at": "2025-01-13T16:54:30.667462Z",
+    "actions": [],
+    "user_provided_tags": [],
+    "attack_types": null,
+    "tactics_and_techniques": null,
+    "detection_methods": null,
+    "auto_review_auto_share": false,
+    "triage_abuse_reports": false,
+    "triage_flagged_messages": false,
+    "action_ids": [
+        "3d112c7c-bfc4-483a-9fb7-da3d466ddd56"
+    ]
+}
