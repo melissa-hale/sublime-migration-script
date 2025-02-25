@@ -1,9 +1,0 @@
-{
-  "active": true,
-  "config": {
-    "endpoint": "https://hooks.slack.com/services/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",
-    "disable_when_landed_in_spam": false
-  },
-  "name": "test add slack alert",
-  "type": "slack_incoming_webhook"
-}

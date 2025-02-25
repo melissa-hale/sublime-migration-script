@@ -1,9 +1,0 @@
-{
-  "name": "test_add_list",
-  "description": "test list",
-  "entries": [
-    "test",
-    "test12"
-  ],
-  "entry_type": "string"
-}
