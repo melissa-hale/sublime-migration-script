@@ -38,12 +38,6 @@ def export_user_group_lists(source_client):
         lst for lst in user_group_list_data if lst.get("created_by_user_name") not in EXCLUDED_AUTHORS
     ]
 
-    ### don't think i need this for UG lists
-    # for user_group_list in filtered_user_group_list_data:
-    #     list_id = user_group_list["id"]
-    #     user_group_list_entries = source_client.get(ENDPOINTS["getListEntries"] + f"{list_id}")
-    #     user_group_list["entries"] = user_group_list_entries.get("entries", []) 
-
     return filtered_user_group_list_data
 
 def import_user_group_lists(dest_client, user_group_list_data):

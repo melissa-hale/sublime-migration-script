@@ -1,26 +1,3 @@
-# In SOURCE
-## get Id of Sublime Core Feed
-## initialize an object to store mapped rules and exclusions
-## get all Sublime Feed rules ---> /rules
-## for each Sublime Core Feed rule, get Rule ---> /rules/{rule-id}
-## parse thru response, if ["exclusions"] > 0 then..
-## parse and detect type, examples:
-#------ recipient_email -> "any(recipients.to, .email.email == 'penelope.seinfeld@gmail.com')"
-#------ sender_domain -> "sender.email.email == 'community@superdatascience.com'"
-#------ sender_email -> "sender.email.email == 'community@superdatascience.com'"
-## add to mapping object:
-#------ {rule_name: {recipient_email: "penelope.seinfeld@gmail.com", sender_domain: "community@superdatascience.com"}}
-## return the object
-
-# In DESTINATION
-## get Id of Sublime core feed
-## initialize an object to store mapped rules and exclusions
-## get all Sublime Feed Rules
-## using the object from the SOURCE mapping, locate the ruleIds that contain exclusions
-## store those Ids somewhere along with their exclusions since they are required to add the exclusion to the matching rule
-#------ {rule_id: {recipient_email: "penelope.seinfeld@gmail.com", sender_domain: "community@superdatascience.com"}}
-## POST to /rules/{id}/add-exclusion for each exclusion type
-
 import re
 from config.settings import ENDPOINTS
 from config.templates import EXCLUSION_TO_RULE_TEMPLATE
@@ -50,8 +27,7 @@ def fetch_all_rules(client, sublime_feed_id, limit=100):
         all_rules.extend(response["rules"])
         count = response["count"]
         total = response["total"] 
-
-        print(f"📥 Fetched {count} rules (Offset: {offset}/{total})")
+        print(f"Fetched {count} rules (Offset: {offset}/{total})")
 
         if len(all_rules) >= total:
             break
@@ -68,7 +44,7 @@ def export_exclusions(source_client):
     sublime_feed_id = next((feed["id"] for feed in feeds if feed["name"] == "Sublime Core Feed"), None)
     
     if not sublime_feed_id:
-        print("❌ Error: Sublime Core Feed not found in source")
+        print("Sublime Core Feed not found in source")
         return {}
 
     rules = fetch_all_rules(source_client, sublime_feed_id)
@@ -76,22 +52,19 @@ def export_exclusions(source_client):
     exclusions_mapping = {}
 
     for rule in rules:
-        if "Spam" in rule["name"]:
-            print(rule)
-            rule_id = rule["id"]
-            rule_name = rule["name"]
+        rule_id = rule["id"]
+        rule_name = rule["name"]
 
-            rule_details = source_client.get(f"{ENDPOINTS['rules']}/{rule_id}")
-            
-            if len(rule_details["exclusions"]) > 0:
-                print(rule_details)
-                exclusions_mapping[rule_name] = {}
+        rule_details = source_client.get(f"{ENDPOINTS['rules']}/{rule_id}")
+        
+        if len(rule_details["exclusions"]) > 0:
+            exclusions_mapping[rule_name] = {}
 
-                for exclusion in rule_details["exclusions"]:
-                    exclusion_type, exclusion_value = extract_exclusion_type(exclusion)
+            for exclusion in rule_details["exclusions"]:
+                exclusion_type, exclusion_value = extract_exclusion_type(exclusion)
 
-                    if exclusion_type and exclusion_value:
-                        exclusions_mapping[rule_name][exclusion_type] = exclusion_value
+                if exclusion_type and exclusion_value:
+                    exclusions_mapping[rule_name][exclusion_type] = exclusion_value
 
     #print(exclusions_mapping) ## {'Spam: Attendee List solicitation': {'recipient_email': 'penelope.seinfeld@gmail.com', 'sender_email': 'community@superdatascience.com', 'sender_domain': 'superdatascience.com'}}
     return exclusions_mapping
@@ -104,7 +77,7 @@ def import_exclusions(dest_client, exclusions_mapping):
     sublime_feed_id = next((feed["id"] for feed in feeds if feed["name"] == "Sublime Core Feed"), None)
     
     if not sublime_feed_id:
-        print("❌ Error: Sublime Core Feed not found in destination")
+        print("Sublime Core Feed not found in destination")
         return
 
     rules = fetch_all_rules(dest_client, sublime_feed_id)
@@ -128,4 +101,4 @@ def import_exclusions(dest_client, exclusions_mapping):
             except Exception as e:
                 add_error(f"Exclusion {exclusion_type} -> {exclusion_value}", str(e))
 
-    print("✅ Exclusions migration complete!")
+    print("Exclusions migration complete!")
